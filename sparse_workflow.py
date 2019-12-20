@@ -57,7 +57,8 @@ class DoubleLink:
             self._tail = new_node
         else:
             if index < self._tail._index:
-                return 'Index is lower than current tail index'
+                print('Index is lower than current tail index')
+                return
             self._tail._next = new_node
             new_node._prev = self._tail
             self._tail = new_node
@@ -86,6 +87,7 @@ class DoubleLink:
             return n
 
     def set_item(self,element,index):
+        ''' For changing indices that already exist '''
         if self.is_empty() == True:
             print('No nodes')
         else:
@@ -113,6 +115,14 @@ class DoubleLink:
             self._tail = new_node
         else:
             n = self._head
+            # this makes new_node the head
+            if new_node._index < n._index:
+                self._head._prev = new_node
+                new_node._next = self._head
+                self._head = new_node
+                self._head._prev = None
+                self._size += 1
+            # find where new node falls between
             while n._index < new_node._index and n._next is not None:
                 if n._next._index > new_node._index:
                     new_node._prev = n
@@ -120,14 +130,14 @@ class DoubleLink:
                     n._next = new_node
                     n._next._prev = new_node
                     self._size =+ 1
-            # add at end
+                n = n._next
+            # add as tail
             if n._next is None:
                 self._tail._next = new_node
                 new_node._prev = self._tail
                 self._tail = new_node
                 self._tail._next = None 
                 self._size =+ 1
-        return
                 
             
 
@@ -205,11 +215,14 @@ def sparse_math(vec1, vec2, op):
 
 # Create a dense list
 vec1 = [0,0,8,0,4,0]
-
 # Validate functions
 print('--- Dense list ---')
 print(vec1)
+print('Length of dense list: ', len(vec1))
+print('--- Dense list ---')
 vec1 = sparsify(vec1)
+print('Length of sparse DLL: ', vec1._length())
+
 #print_list will list out every value and index present in sparse mode
 print('--- print_list output ---')
 vec1.print_list()
@@ -236,11 +249,21 @@ print('--- Try to insert at end with an index lower than the current _tail ---')
 vec1.insert_at_end(12,5)
 
 # Use insert to add anywhere
+print('.Insert can be used to insert anywhere in the DLL')
 vec1.insert(4,3)
 vec1.print_list()
 
-#%% Sample Flow 2
+#%% Sample Flow for math
 
 # Create two dense lists - in this case, not all indices agree but _length of both is equivalent
 vec1 = [0,0,1,0,2,0,0,0,0,7,8,2,5]
 vec2 = [0,0,2,0,1,0,0,1,5,0,0,4,2]
+
+# function returns the full DoubleLink() so it can be assigned
+# It will print operator choice, dense output, and sparse DLL output 
+sparse_math(vec1,vec2,'+')
+
+sparse_math(vec1,vec2,'-')
+
+sparse_math(vec1,vec2,'*')
+
